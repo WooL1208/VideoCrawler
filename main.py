@@ -7,8 +7,22 @@ from argparse import ArgumentParser
 from fake_useragent import UserAgent
 from selenium import webdriver
 
+
 class Main(object):
+    '''
+    probrom:
+        1. 網頁會有彈出窗格
+        2. 下載路徑無法變更
+    to-do:
+        1. 加入自動關閉彈出窗格
+        2. 嘗試wget和requests方法下載影片
+    '''
+
     def __init__(self, args):
+        '''
+        初始化
+        設定各種變數
+        '''
         match args.engine:
             case 1:
                 self.url = 'https://www.pexels.com/zh-tw/search/videos/'
@@ -24,39 +38,32 @@ class Main(object):
         self.download = './data/'
 
     def new_chrome_browser(self, headless=True, download_path=None):
+        '''
+        設定瀏覽器
+        '''
         user_agent = UserAgent()
-        headers = {
-            '"Accept"="text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"',
-            '"Accept-Encoding"="gzip, deflate, br"',
-            '"Accept-Language"="zh-TW,zh;q=0.9,ja-JP;q=0.8,ja;q=0.7,en-US;q=0.6,en;q=0.5"',
-            '"Host"={self.url}',
-            '"Sec-Ch-Ua"="\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"101\", \"Google Chrome\";v=\"101\""',
-            '"Sec-Ch-Ua-Mobile"="?0"',
-            '"Sec-Ch-Ua-Platform"="\"Windows\""',
-            '"Sec-Fetch-Dest"="document"',
-            '"Sec-Fetch-Mode"="navigate"',
-            '"Sec-Fetch-Site"="none"',
-            '"Sec-Fetch-User"="?1"',
-            '"Upgrade-Insecure-Requests"="1"',
-            '"User-Agent"={user_agent.random}'
-        }
-
         options = webdriver.ChromeOptions()
+        options.add_argument('--user-agent=%s' % user_agent.random)
         options.add_experimental_option("excludeSwitches", ["enable-logging"])
         options.add_argument("--disable-blink-features=AutomationControlled")
-        for argument in headers:
-            options.add_argument(argument)
 
         if headless:
             options.add_argument('headless')
         else:
             options.add_argument('--start-maximized')
 
+        '''
+        更改預設下載路徑
+        windows: 還沒測試
+        mac: 目前無效
+        '''
         if download_path is not None:
             os.makedirs(download_path, exist_ok=True)
             download_path += self.keywords + '/'
             os.makedirs(download_path, exist_ok=True)
-            prefs = {"profile.default_content_setting_value": {'notifications': 2}, "profile.default_content_setting.popups": 0, "download.default_directory": download_path}
+            prefs = {"profile.default_content_setting_value": {'notifications': 2},
+                     "profile.default_content_setting.popups": 0,
+                     "download.default_directory": download_path}
             options.add_experimental_option("prefs", prefs)
 
         browser = webdriver.Chrome(
@@ -64,9 +71,15 @@ class Main(object):
         return browser
 
     def search(self):
+        '''
+        開啟指定網頁
+        '''
         self.driver.get(self.url + self.keywords)
 
     def load_fullpage(self):
+        '''
+        把網頁滑到底確保所有元素都被載入
+        '''
         print('正在等待頁面載入', flush=True)
         get_height_last = 0
         while True:
@@ -82,6 +95,13 @@ class Main(object):
                 get_height_last = get_height
 
     def download_videos(self):
+        '''
+        下載影片
+
+        to-do:
+        如果有X按鈕就按下去
+        class name: js-modal-close-button rd__button rd__button--text-secondary rd__button--circle-icon--small
+        '''
         elements = self.driver.find_elements_by_xpath(self.xpath)
 
         # 等待Response
@@ -106,8 +126,11 @@ class Main(object):
                   (self.counter, total), flush=True)
 
     def start(self):
+        '''
+        開始執行
+        '''
         self.search()
-        # self.load_fullpage()
+        self.load_fullpage()
         self.download_videos()
         return self.counter
 
