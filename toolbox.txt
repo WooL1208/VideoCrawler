@@ -19,3 +19,13 @@ headers = {
         }
 for argument in headers:
             options.add_argument(argument)
+
+'''
+chrome設定無彈窗和變更預設下載路徑
+windows: 還沒測試
+mac: 目前無效
+'''
+prefs = {"profile.default_content_setting_value": {'notifications': 2},
+                     "profile.default_content_setting.popups": 0,
+                     "download.default_directory": download_path}
+            options.add_experimental_option("prefs", prefs)
