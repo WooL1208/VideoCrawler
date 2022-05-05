@@ -53,6 +53,15 @@ args介紹：
     python main.py --engine {numbering}
     ```
 
+## File Explanation
+
+| 檔案名稱 | 敘述  |
+|  ----  |  ----  |
+| main.py | 主要執行程式 |
+| crawler_action.py | 執行爬蟲之動作 |
+| crawler_method.py | 執行中所需之方法 |
+| toolbox.txt | 開發過程中遭到棄用的方法 |
+
 ## License
 
 MIT
