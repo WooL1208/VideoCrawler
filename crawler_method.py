@@ -3,7 +3,6 @@ import requests
 
 from fake_useragent import UserAgent
 from selenium import webdriver
-
 class CrawlerMethod:
     def __init__(self):
         pass

@@ -17,7 +17,7 @@ if __name__ == '__main__':
                         help="key words",
                         default="")
     parser.add_argument("--engine", type=int,
-                        help="1. pexel \n 2. coverr",
+                        help="1. pexel \n 2. coverr(not usable)",
                         default=1)
     parser.add_argument("--headless", action="store_true",
                         help="是否開啟瀏覽器",

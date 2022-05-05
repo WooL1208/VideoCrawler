@@ -1,4 +1,5 @@
-﻿import time
+﻿from time import sleep
+from tqdm import tqdm
 from crawler_method import CrawlerMethod
 
 class CrawlerAction:
@@ -35,7 +36,7 @@ class CrawlerAction:
         while True:
             self.driver.execute_script(
                 "window.scrollTo(0, document.documentElement.scrollHeight);")
-            time.sleep(3)
+            sleep(3)
             get_height = self.driver.execute_script(
                 "return document.documentElement.scrollHeight;")
             if get_height == get_height_last:
@@ -56,14 +57,11 @@ class CrawlerAction:
         while total != len(elements):
             total = len(elements)
             elements = self.driver.find_elements_by_xpath(self.xpath)
-        for index, element in enumerate(elements):
+        for index, element in enumerate(tqdm(elements)):
             try:
                 self.crawler_method.url_download(element.get_attribute('href'), filename=download_path + f'video{index}.mp4')
                 # print(index, element.get_attribute('href'))
-                time.sleep(0.5)
+                sleep(0.5)
                 self.counter += 1
             except Exception as e:
                 print(e)
-
-            print('\r%4d / %4d ( 已下載圖片數 / 已找到影片標籤數 )' %
-                  (self.counter, total), flush=True)
