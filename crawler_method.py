@@ -4,6 +4,8 @@ import requests
 
 from fake_useragent import UserAgent
 from selenium import webdriver
+
+
 class CrawlerMethod:
     def __init__(self):
         pass
@@ -16,6 +18,18 @@ class CrawlerMethod:
         os.makedirs(download_path, exist_ok=True)
         download_path += keywords + '/'
         os.makedirs(download_path, exist_ok=True)
+
+    def find_all_elements(self, xpath, driver):
+        '''
+        載入所有elements
+        '''
+        elements = driver.find_elements_by_xpath(xpath)
+        total = 0
+        print('\r正在等待Response', flush=True)
+        while total != len(elements):
+            total = len(elements)
+            elements = driver.find_elements_by_xpath(xpath)
+        return elements
 
     def url_download(self, url, filename=None):
         '''
@@ -30,9 +44,8 @@ class CrawlerMethod:
         '''
         下載影片敘述
         '''
-        with open(f'{filepath}/{filename}.csv', 'a+') as file:
-            w = csv.writer(file)
-            w.writerow(script)
+        with open(f'{filepath}/{filename}.txt', 'a') as file:
+            file.write(script+',\n')
 
     def set_chrome(self, headless=False):
         '''

@@ -2,9 +2,9 @@
 from tqdm import tqdm
 from crawler_method import CrawlerMethod
 
+
 class CrawlerAction:
     def __init__(self, args):
-        self.counter = 0
         match args.engine:
             case 1:
                 self.url = 'https://www.pexels.com/zh-tw/search/videos/'
@@ -13,9 +13,10 @@ class CrawlerAction:
             case _:
                 print("input error: engine is not supported")
 
-        self.driver_path = './chromedriver.exe'
         self.keywords = args.search
         self.engine = args.engine
+        self.driver_path = './chromedriver.exe'
+        self.download_path = f'./data/{self.keywords}/'
         self.crawler_method = CrawlerMethod()
         self.driver = self.crawler_method.set_chrome(headless=args.headless)
 
@@ -52,27 +53,26 @@ class CrawlerAction:
         '''
         下載影片
         '''
-        download_path = f'./data/{self.keywords}/'
         self.crawler_method.create_folder(self.keywords)
-
-        elements = self.driver.find_elements_by_xpath(self.xpath)
-        total = 0
-        print('\r正在等待Response', flush=True)
-        while total != len(elements):
-            total = len(elements)
-            elements = self.driver.find_elements_by_xpath(self.xpath)
-            script_elements = self.driver.find_elements_by_xpath(self.script_xpath)
+        elements = self.crawler_method.find_all_elements(xpath=self.xpath, driver=self.driver)
         for index, element in enumerate(tqdm(elements)):
             try:
-                self.crawler_method.url_download(element.get_attribute('href'), filename=download_path + f'video{index}.mp4')
+                self.crawler_method.url_download(element.get_attribute(
+                    'href'), filename=self.download_path + f'video{index}.mp4')
                 sleep(0.5)
-                self.counter += 1
             except Exception as e:
                 print(e)
-        for element in tqdm(script_elements):
+
+    def download_script(self):
+        '''
+        下載敘述
+        '''
+        self.crawler_method.create_folder(self.keywords)
+        elements = self.crawler_method.find_all_elements(xpath=self.script_xpath, driver=self.driver)
+        for element in tqdm(elements):
             try:
-                self.crawler_method.script_download(element.get_attribute('data-meta-title'), filepath=download_path, filename=self.keywords)
+                self.crawler_method.script_download(element.get_attribute(
+                    'data-meta-title'), filepath=self.download_path, filename=self.keywords)
                 sleep(0.5)
-                self.counter += 1
             except Exception as e:
                 print(e)

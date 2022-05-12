@@ -7,7 +7,7 @@
 ## Usage
 
 ```shell
-python main.py --search {keywords}
+python main.py --video --search {keywords}
 ```
 
 ## Installation
@@ -31,22 +31,28 @@ pip install tqdm argparse requests selenium fake_useragent
 
 args介紹：
 
-1. 搜尋關鍵字：
-
-    ```shell
-    python main.py --search {keywords}
-    ```
-
-2. 選擇是否跳出瀏覽器畫面
-
-    ```shell
-    python main.py --headless
-    ```
-
-3. 選擇要搜尋的網站（尚未實裝）
+1. 選擇是否要下載影片：
 
    ```shell
-    python main.py --engine {numbering}
+    python main.py --video --search {keywords}
+    ```
+
+2. 選擇是否要下載敘述：
+
+    ```shell
+    python main.py --script --search {keywords}
+    ```
+
+3. 選擇是否隱藏瀏覽器畫面
+
+    ```shell
+    python main.py --headless --video --search {keywords}
+    ```
+
+4. 選擇要搜尋的網站（尚未實裝）
+
+   ```shell
+    python main.py --video --engine {numbering} --search {keywords}
     ```
 
 ## File Explanation
