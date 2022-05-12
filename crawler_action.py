@@ -9,6 +9,7 @@ class CrawlerAction:
             case 1:
                 self.url = 'https://www.pexels.com/zh-tw/search/videos/'
                 self.xpath = '//div[@class="photo-item__info"]/a'
+                self.script_xpath = '//article'
             case _:
                 print("input error: engine is not supported")
 
@@ -25,6 +26,9 @@ class CrawlerAction:
         self.driver.get(self.url + self.keywords)
 
     def browser_close(self):
+        '''
+        關閉瀏覽器
+        '''
         self.driver.close()
 
     def load_fullpage(self):
@@ -57,10 +61,17 @@ class CrawlerAction:
         while total != len(elements):
             total = len(elements)
             elements = self.driver.find_elements_by_xpath(self.xpath)
+            script_elements = self.driver.find_elements_by_xpath(self.script_xpath)
         for index, element in enumerate(tqdm(elements)):
             try:
                 self.crawler_method.url_download(element.get_attribute('href'), filename=download_path + f'video{index}.mp4')
-                # print(index, element.get_attribute('href'))
+                sleep(0.5)
+                self.counter += 1
+            except Exception as e:
+                print(e)
+        for element in tqdm(script_elements):
+            try:
+                self.crawler_method.script_download(element.get_attribute('data-meta-title'), filepath=download_path, filename=self.keywords)
                 sleep(0.5)
                 self.counter += 1
             except Exception as e:

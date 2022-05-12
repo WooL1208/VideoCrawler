@@ -1,4 +1,5 @@
 ﻿import os
+import csv
 import requests
 
 from fake_useragent import UserAgent
@@ -24,6 +25,14 @@ class CrawlerMethod:
         download_response = requests.get(url)
         with open(filename, 'wb') as file:
             file.write(download_response.content)
+
+    def script_download(self, script, filepath, filename=None):
+        '''
+        下載影片敘述
+        '''
+        with open(f'{filepath}/{filename}.csv', 'a+') as file:
+            w = csv.writer(file)
+            w.writerow(script)
 
     def set_chrome(self, headless=False):
         '''

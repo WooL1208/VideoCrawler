@@ -26,11 +26,7 @@ git clone https://github.com/WooL1208/VideoCrawler.git
 > 注意：本軟體需運行在python 3.10以上的版本
 
 ```shell
-pip install tqdm
-pip install argparse
-pip install requests
-pip install selenium
-pip install fake_useragent
+pip install tqdm argparse requests selenium fake_useragent
 ```
 
 args介紹：
