@@ -2,7 +2,7 @@ from shutil import copyfile
 import cv2
 import os
 
-data_path = 'data/nintendo/'
+data_path = 'data/shock/'
 file_list = os.listdir(data_path)
 
 # 載入分類器

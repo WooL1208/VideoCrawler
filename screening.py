@@ -6,7 +6,7 @@ from shutil import copyfile
 import cv2
 import os
 
-data_path = 'data/nintendo/'
+data_path = 'data/shock/'
 file_list = os.listdir(data_path)
 output_path = 'output/'
 
@@ -33,7 +33,7 @@ for file in file_list:
         faces = face_cascade.detectMultiScale(
                                             gray,
                                             scaleFactor = 1.1,
-                                            minNeighbors = 10,
+                                            minNeighbors = 30,
                                             minSize=(25, 25))
 
         # 擷取人臉部份        
@@ -41,13 +41,13 @@ for file in file_list:
             #cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
             hasFace = True
             if position == True:
-                px, py, pw, ph = x - 20, y - 20, w + 40, h + 40
+                px, py, pw, ph = x - 30, y - 30, w + 60, h + 60
                 position = False
                 file = file.replace('.mp4', '')
                 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
                 out = cv2.VideoWriter('%s/%s.mp4' % (output_path, file), fourcc, 20.0, (pw, ph))
         
-            crop = frame[py:py + ph, px:px + pw]
+            crop = frame[y:y + ph, x:x + pw]
             out.write(crop)
 
 # Release the VideoCapture object

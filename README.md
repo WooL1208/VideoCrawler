@@ -61,6 +61,8 @@ args介紹：
 | crawler_action.py | 執行爬蟲之動作 |
 | crawler_method.py | 執行中所需之方法 |
 | toolbox.txt | 開發過程中遭到棄用的方法 |
+| delete_video.py | 去除沒人臉的影片 |
+| screening.py | 依人臉範圍擷取影片 |
 
 ## License
 
